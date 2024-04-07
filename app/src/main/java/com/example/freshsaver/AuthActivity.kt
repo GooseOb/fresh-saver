@@ -1,7 +1,9 @@
 package com.example.freshsaver
 
+import android.content.ContentValues
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -10,6 +12,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.firebase.auth.FirebaseAuth
 
 class AuthActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,17 +42,30 @@ class AuthActivity : AppCompatActivity() {
             if (login == "" || pass == "")
                 Toast.makeText(this, "Not all fields are filled", Toast.LENGTH_LONG).show()
             else {
-                val db = DbHelper(this, null)
-                val isAuth = db.getUser(login, pass)
-
-                if(isAuth){
-                    Toast.makeText(this, "User $login is authorized", Toast.LENGTH_LONG).show()
-                    userLogin.text.clear()
-                    userPass.text.clear()
-                    val intent = Intent(this, HomeActivity::class.java)
-                    startActivity(intent)
-                } else
-                    Toast.makeText(this, "User $login is NOT authorized", Toast.LENGTH_LONG).show()
+                val auth = FirebaseAuth.getInstance()
+                auth.signInWithEmailAndPassword(login, pass)
+                    .addOnCompleteListener(this) { task ->
+                        if (task.isSuccessful) {
+                            // Sign in success, update UI with the signed-in user's information
+                            userLogin.text.clear()
+                            userPass.text.clear()
+                            Toast.makeText(
+                                baseContext,
+                                "Authentication succeed.",
+                                Toast.LENGTH_SHORT,
+                            ).show()
+                            val intent = Intent(this, HomeActivity::class.java)
+                            startActivity(intent)
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(ContentValues.TAG, "createUserWithEmail:failure", task.exception)
+                            Toast.makeText(
+                                baseContext,
+                                "Authentication failed.",
+                                Toast.LENGTH_SHORT,
+                            ).show()
+                        }
+                    }
             }
 
 
