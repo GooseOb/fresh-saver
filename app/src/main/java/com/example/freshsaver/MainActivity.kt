@@ -27,11 +27,14 @@ class MainActivity : AppCompatActivity() {
         buttonNext.setOnClickListener{
             val user = FirebaseAuth.getInstance().currentUser;
             if (user == null) {
+
                 val intent = Intent(this, AuthActivity::class.java)
                 startActivity(intent)
             } else {
                 Toast.makeText(this, user.email, Toast.LENGTH_LONG).show()
-                // No user is signed in
+                val intent = Intent(this, HomeActivity::class.java)
+                startActivity(intent)
+                // User already is signed in
             }
         }
     }

@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -25,10 +26,17 @@ class AuthActivity : AppCompatActivity() {
             insets
         }
 
-        val userLogin: EditText = findViewById(R.id.user_login_auth)
+        val userEmail: EditText = findViewById(R.id.user_email_auth)
         val userPass: EditText = findViewById(R.id.user_pass_auth)
         val button: Button = findViewById(R.id.button_auth)
+        val imageToGoogle: ImageView = findViewById(R.id.image_google_auth)
         val linkToReg: TextView = findViewById(R.id.link_to_reg)
+
+        imageToGoogle.setOnClickListener{
+            //button for google authorization
+            val intent = Intent(this, HomeActivity::class.java)
+            startActivity(intent)
+        }
 
         linkToReg.setOnClickListener{
             val intent = Intent(this, RegActivity::class.java)
@@ -36,18 +44,18 @@ class AuthActivity : AppCompatActivity() {
         }
 
         button.setOnClickListener {
-            val login = userLogin.text.toString().trim()
+            val email = userEmail.text.toString().trim()
             val pass = userPass.text.toString().trim()
 
-            if (login == "" || pass == "")
+            if (email == "" || pass == "")
                 Toast.makeText(this, "Not all fields are filled", Toast.LENGTH_LONG).show()
             else {
                 val auth = FirebaseAuth.getInstance()
-                auth.signInWithEmailAndPassword(login, pass)
+                auth.signInWithEmailAndPassword(email, pass)
                     .addOnCompleteListener(this) { task ->
                         if (task.isSuccessful) {
                             // Sign in success, update UI with the signed-in user's information
-                            userLogin.text.clear()
+                            userEmail.text.clear()
                             userPass.text.clear()
                             Toast.makeText(
                                 baseContext,

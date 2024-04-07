@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -25,11 +26,17 @@ class RegActivity : AppCompatActivity() {
             insets
         }
 
-        val userLogin: EditText = findViewById(R.id.user_login)
         val userEmail: EditText = findViewById(R.id.user_email)
         val userPass: EditText = findViewById(R.id.user_pass)
         val button: Button = findViewById(R.id.button_reg)
+        val imageToGoogle: ImageView = findViewById(R.id.image_google_reg)
         val linkToAuth: TextView = findViewById(R.id.link_to_auth)
+
+        imageToGoogle.setOnClickListener{
+            //button for google registration
+            val intent = Intent(this, HomeActivity::class.java)
+            startActivity(intent)
+        }
 
         linkToAuth.setOnClickListener{
             val intent = Intent(this, AuthActivity::class.java)
@@ -37,11 +44,10 @@ class RegActivity : AppCompatActivity() {
         }
 
         button.setOnClickListener {
-            val login = userLogin.text.toString().trim()
             val email = userEmail.text.toString().trim()
             val pass = userPass.text.toString().trim()
 
-            if (login == "" || email == "" || pass == "")
+            if (email == "" || pass == "")
                 Toast.makeText(this, "Not all fields are filled", Toast.LENGTH_LONG).show()
             else {
                 val auth = FirebaseAuth.getInstance()
@@ -50,8 +56,7 @@ class RegActivity : AppCompatActivity() {
                     .addOnCompleteListener(this) { task ->
                         if (task.isSuccessful) {
                             // Sign in success, update UI with the signed-in user's information
-                            Toast.makeText(this, "User $login added", Toast.LENGTH_SHORT)
-                            userLogin.text.clear()
+                            Toast.makeText(this, "User $email added", Toast.LENGTH_SHORT)
                             userEmail.text.clear()
                             userPass.text.clear()
 
