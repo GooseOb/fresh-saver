@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
                 val intent = Intent(this, AuthActivity::class.java)
                 startActivity(intent)
             } else {
-                Toast.makeText(this, user.email, Toast.LENGTH_LONG).show()
+                Toast.makeText(this, user.displayName ?: user.email, Toast.LENGTH_LONG).show()
                 val intent = Intent(this, HomeActivity::class.java)
                 startActivity(intent)
                 // User already is signed in

@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.UserProfileChangeRequest
 
 class RegActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,15 +29,10 @@ class RegActivity : AppCompatActivity() {
 
         val userEmail: EditText = findViewById(R.id.user_email)
         val userPass: EditText = findViewById(R.id.user_pass)
+        // TODO: ЗАМЕНИТЬ НА ИМЯ ПОЛЬЗОВАТЕЛЯ      ↓↓↓↓↓↓↓↓↓↓
+        val userName: EditText = findViewById(R.id.user_email)
         val button: Button = findViewById(R.id.button_reg)
-        val imageToGoogle: ImageView = findViewById(R.id.image_google_reg)
         val linkToAuth: TextView = findViewById(R.id.link_to_auth)
-
-        imageToGoogle.setOnClickListener{
-            //button for google registration
-            val intent = Intent(this, HomeActivity::class.java)
-            startActivity(intent)
-        }
 
         linkToAuth.setOnClickListener{
             val intent = Intent(this, AuthActivity::class.java)
@@ -46,6 +42,7 @@ class RegActivity : AppCompatActivity() {
         button.setOnClickListener {
             val email = userEmail.text.toString().trim()
             val pass = userPass.text.toString().trim()
+            val name = userName.text.toString().trim()
 
             if (email == "" || pass == "")
                 Toast.makeText(this, "Not all fields are filled", Toast.LENGTH_LONG).show()
@@ -56,9 +53,13 @@ class RegActivity : AppCompatActivity() {
                     .addOnCompleteListener(this) { task ->
                         if (task.isSuccessful) {
                             // Sign in success, update UI with the signed-in user's information
-                            Toast.makeText(this, "User $email added", Toast.LENGTH_SHORT)
+                            Toast.makeText(this, "User $name added", Toast.LENGTH_SHORT).show()
                             userEmail.text.clear()
                             userPass.text.clear()
+                            userName.text.clear()
+
+                            val request = UserProfileChangeRequest.Builder().setDisplayName(name).build()
+                            auth.currentUser?.updateProfile(request)
 
                             val intent = Intent(this, HomeActivity::class.java)
                             startActivity(intent)

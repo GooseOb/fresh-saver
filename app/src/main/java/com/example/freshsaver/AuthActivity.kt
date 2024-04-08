@@ -13,7 +13,14 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
 
 class AuthActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,9 +40,12 @@ class AuthActivity : AppCompatActivity() {
         val linkToReg: TextView = findViewById(R.id.link_to_reg)
 
         imageToGoogle.setOnClickListener{
-            //button for google authorization
-            val intent = Intent(this, HomeActivity::class.java)
-            startActivity(intent)
+            val googleSignInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.web_client_id))
+                .requestEmail()
+                .build()
+            val googleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions)
+            startActivityForResult(googleSignInClient.signInIntent, 100)
         }
 
         linkToReg.setOnClickListener{
@@ -57,15 +67,16 @@ class AuthActivity : AppCompatActivity() {
                             // Sign in success, update UI with the signed-in user's information
                             userEmail.text.clear()
                             userPass.text.clear()
+
                             Toast.makeText(
                                 baseContext,
                                 "Authentication succeed.",
                                 Toast.LENGTH_SHORT,
                             ).show()
+
                             val intent = Intent(this, HomeActivity::class.java)
                             startActivity(intent)
                         } else {
-                            // If sign in fails, display a message to the user.
                             Log.w(ContentValues.TAG, "createUserWithEmail:failure", task.exception)
                             Toast.makeText(
                                 baseContext,
@@ -76,7 +87,56 @@ class AuthActivity : AppCompatActivity() {
                     }
             }
 
+        }
+    }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 100) {
+            val signInAccountTask: Task<GoogleSignInAccount> =
+                GoogleSignIn.getSignedInAccountFromIntent(data)
+
+            if (signInAccountTask.isSuccessful) {
+                Toast.makeText(
+                    baseContext,
+                    "Google sign in successful",
+                    Toast.LENGTH_SHORT,
+                ).show()
+                // Initialize sign in account
+                try {
+                    val googleSignInAccount = signInAccountTask.getResult(ApiException::class.java)
+                    if (googleSignInAccount != null) {
+                        val authCredential: AuthCredential = GoogleAuthProvider.getCredential(
+                            googleSignInAccount.idToken, null
+                        )
+                        FirebaseAuth.getInstance().signInWithCredential(authCredential)
+                            .addOnCompleteListener(this) { task ->
+                                if (task.isSuccessful) {
+                                    startActivity(
+                                        Intent(
+                                            this,
+                                            HomeActivity::class.java
+                                        ).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                    )
+                                } else {
+                                    Toast.makeText(
+                                        baseContext,
+                                        "Authentication Failed: " + task.exception?.message,
+                                        Toast.LENGTH_LONG,
+                                    ).show()
+                                }
+                            }
+                    }
+                } catch (e: ApiException) {
+                    e.printStackTrace()
+                }
+            } else {
+                Toast.makeText(
+                    baseContext,
+                    "Authorization failed: " + signInAccountTask.exception?.message,
+                    Toast.LENGTH_LONG,
+                ).show()
+            }
         }
     }
 }
