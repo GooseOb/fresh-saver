@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
-import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -27,10 +26,9 @@ class RegActivity : AppCompatActivity() {
             insets
         }
 
+        val userLogin: EditText = findViewById(R.id.user_login)
         val userEmail: EditText = findViewById(R.id.user_email)
         val userPass: EditText = findViewById(R.id.user_pass)
-        // TODO: ЗАМЕНИТЬ НА ИМЯ ПОЛЬЗОВАТЕЛЯ      ↓↓↓↓↓↓↓↓↓↓
-        val userName: EditText = findViewById(R.id.user_email)
         val button: Button = findViewById(R.id.button_reg)
         val linkToAuth: TextView = findViewById(R.id.link_to_auth)
 
@@ -40,9 +38,10 @@ class RegActivity : AppCompatActivity() {
         }
 
         button.setOnClickListener {
+
             val email = userEmail.text.toString().trim()
             val pass = userPass.text.toString().trim()
-            val name = userName.text.toString().trim()
+            val name = userLogin.text.toString().trim()
 
             if (email == "" || pass == "")
                 Toast.makeText(this, "Not all fields are filled", Toast.LENGTH_LONG).show()
@@ -56,7 +55,7 @@ class RegActivity : AppCompatActivity() {
                             Toast.makeText(this, "User $name added", Toast.LENGTH_SHORT).show()
                             userEmail.text.clear()
                             userPass.text.clear()
-                            userName.text.clear()
+                            userLogin.text.clear()
 
                             val request = UserProfileChangeRequest.Builder().setDisplayName(name).build()
                             auth.currentUser?.updateProfile(request)
