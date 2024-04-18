@@ -5,6 +5,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.navigation.findNavController
+import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,6 +20,10 @@ class HomeActivity : AppCompatActivity() {
             insets
         }
 
+        val btnNavView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+        val controller = findNavController(R.id.fragmentContainerView)
+
+        btnNavView.setupWithNavController(controller)
 
     }
 }
