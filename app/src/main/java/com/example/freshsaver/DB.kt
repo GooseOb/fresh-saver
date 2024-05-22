@@ -24,7 +24,6 @@ data class ProductType(
 data class Product(
     val id: String,
     val productTypeId: String,
-    val userId: String,
     val purchaseDate: Long,
     val expirationDate: Long,
     val title: String? = null,
@@ -86,7 +85,6 @@ class DB {
                         Product(
                             id = document.id,
                             productTypeId = document.getString("product_type_id") ?: "",
-                            userId = document.getString("user_id") ?: "",
                             purchaseDate = document.getLong("purchase_date") ?: 0,
                             expirationDate = document.getLong("expiration_date") ?: 0,
                             title = document.getString("title"),
@@ -99,7 +97,7 @@ class DB {
             }
     }
 
-    fun addProduct(product: Product): Task<DocumentReference> {
+    fun addUserProduct(product: Product): Task<DocumentReference> {
         return db.collection("products")
             .add(hashMapOf(
                 "product_type_id" to product.productTypeId,
