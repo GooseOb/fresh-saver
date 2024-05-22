@@ -30,6 +30,14 @@ data class Product(
     val cost: Double? = null
 )
 
+data class NewProduct(
+    val productTypeId: String,
+    val purchaseDate: Long,
+    val expirationDate: Long? = null,
+    val title: String? = null,
+    val cost: Double? = null
+)
+
 class DB {
     fun getCategories(): Task<List<Category>> {
         return db.collection("categories")
@@ -97,16 +105,36 @@ class DB {
             }
     }
 
-    fun addUserProduct(product: Product): Task<DocumentReference> {
-        return db.collection("products")
-            .add(hashMapOf(
-                "product_type_id" to product.productTypeId,
-                "user_id" to FirebaseAuth.getInstance().currentUser?.uid,
-                "purchase_date" to product.purchaseDate,
-                "expiration_date" to product.expirationDate,
-                "title" to product.title,
-                "cost" to product.cost
-            ))
+    fun addUserProduct(product: NewProduct): Task<DocumentReference> {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
+        val productData = hashMapOf(
+            "product_type_id" to product.productTypeId,
+            "user_id" to userId,
+            "purchase_date" to product.purchaseDate,
+            "title" to product.title,
+            "cost" to product.cost
+        )
+
+        if (product.expirationDate != null) {
+            productData["expiration_date"] = product.expirationDate
+            return db.collection("products")
+                .add(productData)
+        } else {
+            return db.collection("product_types")
+                .document(product.productTypeId)
+                .get()
+                .continueWithTask { task ->
+                if (task.isSuccessful) {
+                    productData["expiration_date"] = task.result?.getLong("time_to_expire")
+                        ?.let { product.purchaseDate + it * 60 * 1000 /* Convert minutes to milliseconds */ }
+                        ?: throw IllegalStateException("Expiration date not found")
+                    db.collection("products")
+                        .add(productData)
+                } else {
+                    throw task.exception ?: IllegalStateException("Failed to fetch product type")
+                }
+            }
+        }
     }
 
     companion object {
