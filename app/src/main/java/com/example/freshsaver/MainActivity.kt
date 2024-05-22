@@ -2,6 +2,7 @@ package com.example.freshsaver
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -34,6 +35,20 @@ class MainActivity : AppCompatActivity() {
                 val intent = Intent(this, HomeActivity::class.java)
                 startActivity(intent)
                 // User already is signed in
+
+                DB.getInstance().getCategories()
+                    .addOnSuccessListener { categories ->
+                        categories.forEach { category ->
+                            Log.d("category", category.id)
+                            Log.d("category", category.title)
+                            DB.getInstance().getProductTypesByCategory(category.id)
+                                .addOnSuccessListener { pts ->
+                                    pts.forEach {
+                                        Log.d(category.title, it.title)
+                                    }
+                            }
+                        }
+                    }
             }
         }
     }
