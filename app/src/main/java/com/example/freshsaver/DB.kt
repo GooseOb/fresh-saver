@@ -180,7 +180,7 @@ class DB {
 
     fun setUserProduct(product: Product): Task<Void> {
         return products.document(product.id).set(mapOf(
-            "productTypeId" to product.productTypeId,
+            "product_type_id" to product.productTypeId,
             "purchaseDate" to product.purchaseDate,
             "expirationDate" to product.expirationDate,
             "title" to product.title,
@@ -190,19 +190,19 @@ class DB {
 
     fun setProductType(productType: ProductType): Task<Void> {
         return productTypes.document(productType.id).set(mapOf(
-            // "userId" to productType.userId,
-            "categoryId" to productType.categoryId,
+            // "user_id" to productType.userId,
+            "category_id" to productType.categoryId,
             "title" to productType.title,
-            "imageUrl" to productType.imageUrl,
-            "timeToExpire" to productType.timeToExpire
+            "image_url" to productType.imageUrl,
+            "time_to_expire" to productType.timeToExpire
         ))
     }
 
     fun setCategory(category: Category): Task<Void> {
         return categories.document(category.id).set(mapOf(
-            // "userId" to category.userId,
+            // "user_id" to category.userId,
             "title" to category.title,
-            "imageUrl" to category.imageUrl
+            "image_url" to category.imageUrl
         ))
     }
 
