@@ -95,8 +95,8 @@ class DB {
     }
 
     fun getUserProducts(): Task<List<Product>> {
-        val uid = auth.currentUser?.uid
-        return products
+        val uid = FirebaseAuth.getInstance().currentUser?.uid
+        return db.collection("products")
             .whereEqualTo("user_id", uid)
             .get()
             .continueWith { task ->
@@ -116,6 +116,7 @@ class DB {
                 }
             }
     }
+
 
     fun addUserProduct(product: NewProduct): Task<DocumentReference> {
         val userId = auth.currentUser?.uid
