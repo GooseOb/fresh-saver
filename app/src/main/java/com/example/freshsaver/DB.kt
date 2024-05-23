@@ -8,39 +8,51 @@ import com.google.firebase.firestore.FirebaseFirestore
 data class Category(
     val id: String,
     val userId: String = "global",
-    val title: String,
-    val imageUrl: String? = null
+    var title: String,
+    var imageUrl: String? = null
+)
+
+data class NewCategory(
+    var title: String,
+    var imageUrl: String? = null
 )
 
 data class ProductType(
     val id: String,
-    val categoryId: String,
     val userId: String = "global",
-    val title: String,
-    val imageUrl: String? = null,
-    val timeToExpire: Int? = null
+    var categoryId: String,
+    var title: String,
+    var imageUrl: String? = null,
+    var timeToExpire: Int? = null
+)
+
+data class NewProductType(
+    var categoryId: String,
+    var title: String,
+    var imageUrl: String? = null,
+    var timeToExpire: Int? = null
 )
 
 data class Product(
     val id: String,
-    val productTypeId: String,
-    val purchaseDate: Long,
-    val expirationDate: Long,
-    val title: String? = null,
-    val cost: Double? = null
+    var productTypeId: String,
+    var purchaseDate: Long,
+    var expirationDate: Long,
+    var title: String? = null,
+    var cost: Double? = null
 )
 
 data class NewProduct(
-    val productTypeId: String,
-    val purchaseDate: Long,
-    val expirationDate: Long? = null,
-    val title: String? = null,
-    val cost: Double? = null
+    var productTypeId: String,
+    var purchaseDate: Long,
+    var expirationDate: Long? = null,
+    var title: String? = null,
+    var cost: Double? = null
 )
 
 class DB {
     fun getCategories(): Task<List<Category>> {
-        return db.collection("categories")
+        return categories
             .whereIn("user_id", getUserIds())
             .get()
             .continueWith { task ->
@@ -60,7 +72,7 @@ class DB {
     }
 
     fun getProductTypesByCategory(categoryId: String): Task<List<ProductType>> {
-        return db.collection("product_types")
+        return productTypes
             .whereIn("user_id", getUserIds())
             .whereEqualTo("category_id", categoryId)
             .get()
@@ -83,8 +95,8 @@ class DB {
     }
 
     fun getUserProducts(): Task<List<Product>> {
-        val uid = FirebaseAuth.getInstance().currentUser?.uid
-        return db.collection("products")
+        val uid = auth.currentUser?.uid
+        return products
             .whereEqualTo("user_id", uid)
             .get()
             .continueWith { task ->
@@ -106,7 +118,7 @@ class DB {
     }
 
     fun addUserProduct(product: NewProduct): Task<DocumentReference> {
-        val userId = FirebaseAuth.getInstance().currentUser?.uid
+        val userId = auth.currentUser?.uid
         val productData = hashMapOf(
             "product_type_id" to product.productTypeId,
             "user_id" to userId,
@@ -117,10 +129,9 @@ class DB {
 
         if (product.expirationDate != null) {
             productData["expiration_date"] = product.expirationDate
-            return db.collection("products")
-                .add(productData)
+            return products.add(productData)
         } else {
-            return db.collection("product_types")
+            return productTypes
                 .document(product.productTypeId)
                 .get()
                 .continueWithTask { task ->
@@ -128,13 +139,54 @@ class DB {
                     productData["expiration_date"] = task.result?.getLong("time_to_expire")
                         ?.let { product.purchaseDate + it * 60 * 1000 /* Convert minutes to milliseconds */ }
                         ?: throw IllegalStateException("Expiration date not found")
-                    db.collection("products")
-                        .add(productData)
+                    products.add(productData)
                 } else {
                     throw task.exception ?: IllegalStateException("Failed to fetch product type")
                 }
             }
         }
+    }
+
+    fun createCategory(category: NewCategory): Task<DocumentReference> {
+        return categories.add(hashMapOf(
+            "title" to category.title,
+            "user_id" to auth.currentUser?.uid,
+            "image_url" to category.imageUrl
+        ))
+    }
+
+    fun createProductType(productType: NewProductType): Task<DocumentReference> {
+        return productTypes.add(hashMapOf(
+            "category_id" to productType.categoryId,
+            "user_id" to auth.currentUser?.uid,
+            "title" to productType.title,
+            "image_url" to productType.imageUrl,
+            "time_to_expire" to productType.timeToExpire
+        ))
+    }
+
+    fun deleteUserProduct(id: String): Task<Void> {
+        return products.document(id).delete()
+    }
+
+    fun deleteProductType(id: String): Task<Void> {
+        return productTypes.document(id).delete()
+    }
+
+    fun deleteCategory(id: String): Task<Void> {
+        return categories.document(id).delete()
+    }
+
+    fun setUserProduct(id: String, product: Product): Task<Void> {
+        return products.document(id).set(product)
+    }
+
+    fun setProductType(id: String, productType: ProductType): Task<Void> {
+        return productTypes.document(id).set(productType)
+    }
+
+    fun setCategory(id: String, category: Category): Task<Void> {
+        return categories.document(id).set(category)
     }
 
     companion object {
@@ -149,10 +201,15 @@ class DB {
     }
 
     private val db = FirebaseFirestore.getInstance()
+    private val auth = FirebaseAuth.getInstance()
+
+    private val products = db.collection("products")
+    private val productTypes = db.collection("product_types")
+    private val categories = db.collection("categories")
 
     private fun getUserIds(): MutableList<String> {
         val userIds = mutableListOf("global")
-        FirebaseAuth.getInstance().currentUser?.uid?.let {
+        auth.currentUser?.uid?.let {
             userIds.add(it)
         }
         return userIds
