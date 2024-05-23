@@ -178,16 +178,32 @@ class DB {
         return categories.document(id).delete()
     }
 
-    fun setUserProduct(id: String, product: Product): Task<Void> {
-        return products.document(id).set(product)
+    fun setUserProduct(product: Product): Task<Void> {
+        return products.document(product.id).set(mapOf(
+            "productTypeId" to product.productTypeId,
+            "purchaseDate" to product.purchaseDate,
+            "expirationDate" to product.expirationDate,
+            "title" to product.title,
+            "cost" to product.cost
+        ))
     }
 
-    fun setProductType(id: String, productType: ProductType): Task<Void> {
-        return productTypes.document(id).set(productType)
+    fun setProductType(productType: ProductType): Task<Void> {
+        return productTypes.document(productType.id).set(mapOf(
+            // "userId" to productType.userId,
+            "categoryId" to productType.categoryId,
+            "title" to productType.title,
+            "imageUrl" to productType.imageUrl,
+            "timeToExpire" to productType.timeToExpire
+        ))
     }
 
-    fun setCategory(id: String, category: Category): Task<Void> {
-        return categories.document(id).set(category)
+    fun setCategory(category: Category): Task<Void> {
+        return categories.document(category.id).set(mapOf(
+            // "userId" to category.userId,
+            "title" to category.title,
+            "imageUrl" to category.imageUrl
+        ))
     }
 
     companion object {
