@@ -181,8 +181,8 @@ class DB {
     fun setUserProduct(product: Product): Task<Void> {
         return products.document(product.id).set(mapOf(
             "product_type_id" to product.productTypeId,
-            "purchaseDate" to product.purchaseDate,
-            "expirationDate" to product.expirationDate,
+            "purchase_date" to product.purchaseDate,
+            "expiration_date" to product.expirationDate,
             "title" to product.title,
             "cost" to product.cost
         ))
