@@ -3,54 +3,50 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="#e2a600"
     android:padding="16dp">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Expiration Date"
         android:textColor="#201E28"
+        android:text="Product Type Title"
         android:paddingBottom="8dp" />
 
-    <Button
-        android:id="@+id/buttonSelectDate"
+    <EditText
+        android:id="@+id/editTextProductTypeTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Select Expiration Date"
-        android:background="#e2a600"
-        android:textColor="#201E28" />
+        android:textColor="#201E28"
+        android:hint="Enter product type title" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Price"
+        android:text="Product Type Image URL"
         android:textColor="#201E28"
         android:paddingTop="16dp"
         android:paddingBottom="8dp" />
 
     <EditText
-        android:id="@+id/editTextPrice"
+        android:id="@+id/editTextProductTypeImageUrl"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
         android:textColor="#201E28"
-        android:hint="Enter price"
-        android:inputType="numberDecimal" />
+        android:hint="Enter image URL" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Title"
-        android:paddingTop="16dp"
         android:textColor="#201E28"
+        android:text="Time to Expire (days)"
+        android:paddingTop="16dp"
         android:paddingBottom="8dp" />
 
     <EditText
-        android:id="@+id/editTextTitle"
+        android:id="@+id/editTextProductTypeTimeToExpire"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
         android:textColor="#201E28"
-        android:hint="Enter title"
-        android:inputType="text" />
-
+        android:hint="Enter time to expire in days"
+        android:inputType="number" />
 </LinearLayout>
