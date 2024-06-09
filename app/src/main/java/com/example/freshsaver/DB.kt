@@ -1,6 +1,7 @@
 package com.example.freshsaver
 
 import com.google.android.gms.tasks.Task
+import com.google.android.gms.tasks.Tasks // Добавьте этот импорт
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
@@ -39,7 +40,8 @@ data class Product(
     var purchaseDate: Long,
     var expirationDate: Long,
     var title: String? = null,
-    var cost: Double? = null
+    var cost: Double? = null,
+    val userId: String? = null // Добавьте userId в модель Product
 )
 
 data class NewProduct(
@@ -108,7 +110,8 @@ class DB {
                             purchaseDate = document.getLong("purchase_date") ?: 0,
                             expirationDate = document.getLong("expiration_date") ?: 0,
                             title = document.getString("title"),
-                            cost = document.getDouble("cost")
+                            cost = document.getDouble("cost"),
+                            userId = document.getString("user_id") // Добавляем userId
                         )
                     } ?: emptyList()
                 } else {
@@ -116,7 +119,6 @@ class DB {
                 }
             }
     }
-
 
     fun addUserProduct(product: NewProduct): Task<DocumentReference> {
         val userId = auth.currentUser?.uid
@@ -136,15 +138,15 @@ class DB {
                 .document(product.productTypeId)
                 .get()
                 .continueWithTask { task ->
-                if (task.isSuccessful) {
-                    productData["expiration_date"] = task.result?.getLong("time_to_expire")
-                        ?.let { product.purchaseDate + it * 60 * 1000 /* Convert minutes to milliseconds */ }
-                        ?: throw IllegalStateException("Expiration date not found")
-                    products.add(productData)
-                } else {
-                    throw task.exception ?: IllegalStateException("Failed to fetch product type")
+                    if (task.isSuccessful) {
+                        productData["expiration_date"] = task.result?.getLong("time_to_expire")
+                            ?.let { product.purchaseDate + it * 60 * 1000 /* Convert minutes to milliseconds */ }
+                            ?: throw IllegalStateException("Expiration date not found")
+                        products.add(productData)
+                    } else {
+                        throw task.exception ?: IllegalStateException("Failed to fetch product type")
+                    }
                 }
-            }
         }
     }
 
@@ -179,18 +181,21 @@ class DB {
     }
 
     fun setUserProduct(product: Product): Task<Void> {
-        return products.document(product.id).set(mapOf(
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return Tasks.forException(Exception("User not logged in"))
+        val productData = hashMapOf(
             "product_type_id" to product.productTypeId,
-            "purchaseDate" to product.purchaseDate,
-            "expirationDate" to product.expirationDate,
+            "purchase_date" to product.purchaseDate,
+            "expiration_date" to product.expirationDate,
             "title" to product.title,
-            "cost" to product.cost
-        ))
+            "cost" to product.cost,
+            "user_id" to userId // Добавляем поле user_id
+        )
+
+        return products.document(product.id).set(productData)
     }
 
     fun setProductType(productType: ProductType): Task<Void> {
         return productTypes.document(productType.id).set(mapOf(
-            // "user_id" to productType.userId,
             "category_id" to productType.categoryId,
             "title" to productType.title,
             "image_url" to productType.imageUrl,
@@ -200,7 +205,6 @@ class DB {
 
     fun setCategory(category: Category): Task<Void> {
         return categories.document(category.id).set(mapOf(
-            // "user_id" to category.userId,
             "title" to category.title,
             "image_url" to category.imageUrl
         ))
