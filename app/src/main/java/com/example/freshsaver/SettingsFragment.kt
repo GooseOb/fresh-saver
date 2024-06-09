@@ -35,9 +35,6 @@ class SettingsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val button_lang: button = view.findViewById(/* id = */ R.id.button_lang)
-        button_lang.setOnClickListener {
-        }
 
         return inflater.inflate(R.layout.fragment_settings, container, false)
     }
