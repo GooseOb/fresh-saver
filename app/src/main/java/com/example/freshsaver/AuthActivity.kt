@@ -35,7 +35,7 @@ class AuthActivity : AppCompatActivity() {
 
         val userEmail: EditText = findViewById(R.id.user_email_auth)
         val userPass: EditText = findViewById(R.id.user_pass_auth)
-        val button: Button = findViewById(R.id.button_auth)
+        val button: Button = findViewById(R.id.button_signin)
         val imageToGoogle: ImageView = findViewById(R.id.image_google_auth)
         val linkToReg: TextView = findViewById(R.id.link_to_reg)
 
