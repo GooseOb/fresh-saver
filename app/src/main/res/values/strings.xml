@@ -1,5 +1,17 @@
 <resources>
     <string name="app_name">FreshSaver</string>
     <string name="web_client_id">1095458757260-jblc5b32cddhoio2t3a8jbsgkm7t200v.apps.googleusercontent.com</string>
+    <string name="mode">Mode</string>
+    <string name="language">Language</string>
+    <string name="log_out">Log out</string>
+    <string name="change_password">Change password</string>
+    <string name="textview">TextView</string>
+    <string name="textviewlogin">TextView</string>
+    <string name="authorization">Authorization</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="sign_in">Sign in</string>
+    <string name="registration">Registration</string>
+    <string name="todo">TODO</string>
     <!-- TODO: Remove or change this placeholder text -->
 </resources>

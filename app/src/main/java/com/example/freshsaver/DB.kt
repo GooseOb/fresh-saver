@@ -1,10 +1,12 @@
 package com.example.freshsaver
 
+import android.util.Log
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks // Добавьте этот импорт
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.QuerySnapshot
 
 data class Category(
     val id: String,
@@ -50,6 +52,20 @@ data class NewProduct(
     var expirationDate: Long? = null,
     var title: String? = null,
     var cost: Double? = null
+)
+
+data class Recipe(
+    val id: String,
+    var title: String,
+    var imageUrl: String? = null,
+    var productTypeIds: List<String>,
+    val userId: String = "global"
+)
+
+data class NewRecipe(
+    var title: String,
+    var imageUrl: String? = null,
+    var productTypeIds: List<String>,
 )
 
 class DB {
@@ -168,6 +184,61 @@ class DB {
         ))
     }
 
+    fun createRecipe(recipe: NewRecipe): Task<DocumentReference> {
+        return recipes.add(mapOf(
+            "title" to recipe.title,
+            "image_url" to recipe.imageUrl,
+            "product_type_ids" to recipe.productTypeIds,
+            "user_id" to auth.currentUser?.uid
+        ))
+    }
+
+    fun getRecipesOrdered(): Task<List<Recipe>> {
+        val userProductsTask = products.get()
+        val productTypesTask = productTypes.get()
+        val currentTime = System.currentTimeMillis()
+
+        return Tasks.whenAllSuccess<QuerySnapshot>(userProductsTask, productTypesTask).onSuccessTask { snapshots ->
+            val productsSnapshot = snapshots[0]
+            val productTypesSnapshot = snapshots[1]
+
+            val productTypeMap = productTypesSnapshot.documents.associate { doc ->
+                doc.id to doc.getString("title")
+            }
+
+            val userProductTypeIds = productsSnapshot.documents
+                .filter { doc ->
+                    val expirationDate = doc.getLong("expiration_date") ?: 0L
+                    expirationDate > currentTime
+                }
+                .mapNotNull { it.getString("product_type_id") }
+
+            recipes
+                .whereIn("user_id", getUserIds())
+                .get()
+                .continueWith { task ->
+                    val recipesSnapshot = task.result
+                    val recipesList = recipesSnapshot?.documents?.map { document ->
+                        Recipe(
+                            id = document.id,
+                            title = document.getString("title") ?: "",
+                            imageUrl = document.getString("image_url"),
+                            productTypeIds = document.get("product_type_ids") as? List<String> ?: emptyList(),
+                            userId = document.getString("user_id") ?: "global"
+                        )
+                    } ?: emptyList()
+
+                    recipesList.sortedByDescending { recipe ->
+                        recipe.productTypeIds.count { it in userProductTypeIds }
+                    }.map{
+                        it.apply {
+                            productTypeIds = productTypeIds.mapNotNull { productTypeMap[it] }
+                        }
+                    }
+                }
+        }
+    }
+
     fun deleteUserProduct(id: String): Task<Void> {
         return products.document(id).delete()
     }
@@ -178,6 +249,10 @@ class DB {
 
     fun deleteCategory(id: String): Task<Void> {
         return categories.document(id).delete()
+    }
+
+    fun deleteRecipe(id: String): Task<Void> {
+        return recipes.document(id).delete()
     }
 
     fun setUserProduct(product: Product): Task<Void> {
@@ -227,6 +302,7 @@ class DB {
     private val products = db.collection("products")
     private val productTypes = db.collection("product_types")
     private val categories = db.collection("categories")
+    private val recipes = db.collection("recipes")
 
     private fun getUserIds(): MutableList<String> {
         val userIds = mutableListOf("global")
