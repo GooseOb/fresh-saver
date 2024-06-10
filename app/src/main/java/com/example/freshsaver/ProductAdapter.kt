@@ -1,16 +1,32 @@
 package com.example.freshsaver
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import java.text.SimpleDateFormat
+import java.util.*
+import java.util.concurrent.TimeUnit
 
 class ProductAdapter(
-    private val productList: List<Product>,
-    private val onItemClick: (Product) -> Unit,
-    private val onItemLongClick: (Product) -> Unit // Добавим обработчик долгого нажатия
+    private val products: List<Product>,
+    private val onProductLongClick: (Product) -> Unit
 ) : RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
+
+    inner class ProductViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val productName: TextView = itemView.findViewById(R.id.product_name)
+        val productDescription: TextView = itemView.findViewById(R.id.product_description)
+        val productExpiration: TextView = itemView.findViewById(R.id.product_expiration)
+
+        init {
+            itemView.setOnLongClickListener {
+                onProductLongClick(products[adapterPosition])
+                true
+            }
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_product, parent, false)
@@ -18,28 +34,48 @@ class ProductAdapter(
     }
 
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
-        val product = productList[position]
-        holder.bind(product, onItemClick, onItemLongClick)
+        val product = products[position]
+        holder.productName.text = product.title
+        holder.productDescription.text = "Cost: ${product.cost ?: "Unknown"}"
+
+        val currentTime = System.currentTimeMillis()
+        val expirationTime = product.expirationDate
+
+        val daysLeft = calculateDaysLeft(currentTime, expirationTime)
+        if (daysLeft > 0) {
+            holder.productExpiration.text = "Days Left: $daysLeft"
+            holder.productExpiration.setTextColor(when (daysLeft) {
+                1, 2, 3 -> Color.parseColor("#FFA500") // Orange color
+                0 -> Color.parseColor("#FF0000") // Red color
+                else -> Color.BLACK // Default color
+            })
+        } else if (daysLeft == 0) {
+            holder.productExpiration.text = "Days Left: $daysLeft"
+            holder.productExpiration.setTextColor(Color.parseColor("#FF0000")) // Red color
+        } else {
+            holder.productExpiration.text = "Expiration Date Passed"
+            holder.productExpiration.setTextColor(Color.parseColor("#FF0000")) // Red color
+        }
     }
 
-    override fun getItemCount() = productList.size
+    override fun getItemCount() = products.size
 
-    class ProductViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val productName: TextView = itemView.findViewById(R.id.product_name)
-        private val productDescription: TextView = itemView.findViewById(R.id.product_description)
-        private val productExpiration: TextView = itemView.findViewById(R.id.product_expiration)
+    private fun calculateDaysLeft(currentTime: Long, expirationTime: Long): Int {
+        val currentCalendar = Calendar.getInstance()
+        currentCalendar.timeInMillis = currentTime
+        currentCalendar.set(Calendar.HOUR_OF_DAY, 0)
+        currentCalendar.set(Calendar.MINUTE, 0)
+        currentCalendar.set(Calendar.SECOND, 0)
+        currentCalendar.set(Calendar.MILLISECOND, 0)
 
-        fun bind(product: Product, onItemClick: (Product) -> Unit, onItemLongClick: (Product) -> Unit) {
-            productName.text = product.title
-            productDescription.text = "Cost: ${product.cost ?: "Unknown"}"
-            val daysLeft = ((product.expirationDate - System.currentTimeMillis()) / (1000 * 60 * 60 * 24)).toInt()
-            productExpiration.text = "Days Left: $daysLeft"
+        val expirationCalendar = Calendar.getInstance()
+        expirationCalendar.timeInMillis = expirationTime
+        expirationCalendar.set(Calendar.HOUR_OF_DAY, 0)
+        expirationCalendar.set(Calendar.MINUTE, 0)
+        expirationCalendar.set(Calendar.SECOND, 0)
+        expirationCalendar.set(Calendar.MILLISECOND, 0)
 
-            itemView.setOnClickListener { onItemClick(product) }
-            itemView.setOnLongClickListener {
-                onItemLongClick(product)
-                true
-            }
-        }
+        val diffInMillis = expirationCalendar.timeInMillis - currentCalendar.timeInMillis
+        return TimeUnit.MILLISECONDS.toDays(diffInMillis).toInt()
     }
 }

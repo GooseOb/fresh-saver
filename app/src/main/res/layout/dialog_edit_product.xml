@@ -53,14 +53,5 @@
         android:textColor="#201E28"
         android:inputType="text" />
 
-    <Button
-        android:id="@+id/buttonSaveProduct"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Save"
-        android:background="#4CAF50"
-        android:textColor="#FFFFFF"
-        android:paddingTop="16dp"
-        android:layout_marginTop="8dp" />
 
 </LinearLayout>
