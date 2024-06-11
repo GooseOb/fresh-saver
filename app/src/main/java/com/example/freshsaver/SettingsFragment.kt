@@ -1,10 +1,15 @@
 package com.example.freshsaver
 
+import android.content.Context
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
+import android.widget.Button
+import java.util.Locale
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -34,9 +39,38 @@ class SettingsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
+        val view = inflater.inflate(R.layout.fragment_settings, container, false)
 
-        return inflater.inflate(R.layout.fragment_settings, container, false)
+        val button: Button = view.findViewById(R.id.button_lang)
+        button.setOnClickListener {
+            showLanguageDialog()
+        }
+
+        return view
+    }
+
+    private fun showLanguageDialog() {
+        val languages = arrayOf("English", "Russian")
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Choose a language")
+            .setItems(languages) { dialog, which ->
+                when (which) {
+                    0 -> setLocale("en")
+                    1 -> setLocale("ru")
+                }
+            }
+            .create()
+            .show()
+    }
+
+    private fun setLocale(languageCode: String) {
+        val locale = Locale(languageCode)
+        Locale.setDefault(locale)
+        val config = Configuration()
+        config.setLocale(locale)
+        requireContext().resources.updateConfiguration(config, requireContext().resources.displayMetrics)
+
+        activity?.recreate()
     }
 
     companion object {

@@ -4,7 +4,6 @@
     <string name="mode">Mode</string>
     <string name="language">Language</string>
     <string name="log_out">Log out</string>
-    <string name="change_password">Change password</string>
     <string name="textview">TextView</string>
     <string name="textviewlogin">TextView</string>
     <string name="authorization">Authorization</string>

@@ -15,7 +15,7 @@
         android:layout_marginBottom="8dp"
         android:backgroundTint="#201E28"
         android:text="@string/mode"
-        app:layout_constraintBottom_toTopOf="@+id/button_echange"
+        app:layout_constraintBottom_toTopOf="@+id/button_lang"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.507"
         app:layout_constraintStart_toStartOf="parent" />
@@ -42,18 +42,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.507"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/button_echange"
-        android:layout_width="220dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:backgroundTint="#201E28"
-        android:text="@string/change_password"
-        app:layout_constraintBottom_toTopOf="@+id/button_lang"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.505"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
