@@ -18,7 +18,7 @@
         android:layout_marginTop="170dp"
         android:textSize="25sp"
         android:textStyle="bold"
-        android:text="Welcome to FreshSaver!" />
+        android:text="@string/welcome_to_freshsaver" />
 
     <TextView
         android:id="@+id/textView"
@@ -27,7 +27,7 @@
         android:layout_gravity="center"
         android:layout_marginTop="50dp"
         android:fontFamily="@font/montserrat"
-        android:text="Your food freshness ally! Easily monitor groceries, track expiration dates, and discover your dietary patterns. Say hello to a fresher, waste-free kitchen experience!"
+        android:text="@string/your_food_freshness_ally_easily_monitor_groceries_track_expiration_dates_and_discover_your_dietary_patterns_say_hello_to_a_fresher_waste_free_kitchen_experience"
         android:textAlignment="center"
         android:textColor="#fdfdfd"
         android:textSize="16sp"
@@ -37,7 +37,7 @@
         android:id="@+id/button_next"
         android:layout_width="220dp"
         android:layout_height="wrap_content"
-        android:text="Next"
+        android:text="@string/next"
         android:textStyle="bold"
         android:textSize="16sp"
         android:textColor="#fff"

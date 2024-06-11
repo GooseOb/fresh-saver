@@ -22,7 +22,7 @@
             android:textColor="#fdfdfd"
             android:textSize="48sp"
             android:textStyle="bold"
-            android:text="Food"
+            android:text="@string/food"
             android:layout_centerInParent="true" />
 
         <ImageButton

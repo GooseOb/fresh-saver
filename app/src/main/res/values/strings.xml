@@ -12,5 +12,12 @@
     <string name="sign_in">Sign in</string>
     <string name="registration">Registration</string>
     <string name="todo">TODO</string>
+    <string name="your_food_freshness_ally_easily_monitor_groceries_track_expiration_dates_and_discover_your_dietary_patterns_say_hello_to_a_fresher_waste_free_kitchen_experience">Your food freshness ally! Easily monitor groceries, track expiration dates, and discover your dietary patterns. Say hello to a fresher, waste-free kitchen experience!</string>
+    <string name="welcome_to_freshsaver">Welcome to FreshSaver!</string>
+    <string name="next">Next</string>
+    <string name="food">Food</string>
+    <string name="settings">Settings</string>
+    <string name="home">Home</string>
+    <string name="recipes">Recipes</string>
     <!-- TODO: Remove or change this placeholder text -->
 </resources>

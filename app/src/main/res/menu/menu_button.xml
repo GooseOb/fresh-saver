@@ -4,17 +4,17 @@
 
     <item
         android:id="@+id/recipesFragment"
-        android:title="Recipes"
+        android:title="@string/recipes"
         android:icon="@drawable/baseline_dining_24"
         />
     <item
         android:id="@+id/homeFragment"
-        android:title="Home"
+        android:title="@string/home"
         android:icon="@drawable/baseline_home_24"
         />
     <item
         android:id="@+id/settingsFragment"
-        android:title="Settings"
+        android:title="@string/settings"
         android:icon="@drawable/baseline_settings_24"
         />
 </menu>
