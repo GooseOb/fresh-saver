@@ -1,65 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background_color"
     android:orientation="vertical"
-    android:background="#e2a600"
     tools:context=".AuthActivity">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#fdfdfd"
         android:layout_gravity="center"
         android:layout_marginTop="170dp"
+        android:text="@string/authorization"
+        android:textColor="@color/text2_color"
         android:textSize="25sp"
-        android:textStyle="bold"
-        android:text="@string/authorization" />
+        android:textStyle="bold" />
 
     <EditText
         android:id="@+id/user_email_auth"
         android:layout_width="220dp"
         android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
         android:ems="10"
         android:fontFamily="@font/inter_bold"
+        android:hint="@string/email"
         android:importantForAutofill="no"
         android:inputType="textEmailAddress"
-        android:textColorHint="#6a6a6a"
-        android:layout_marginTop="20dp"
-        android:layout_gravity="center"
         android:textColor="#fdfdfd"
-        android:hint="@string/email" />
+        android:textColorHint="#6a6a6a" />
 
 
     <EditText
         android:id="@+id/user_pass_auth"
         android:layout_width="220dp"
         android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
         android:ems="10"
         android:fontFamily="@font/inter_bold"
+        android:hint="@string/password"
         android:importantForAutofill="no"
         android:inputType="textPassword"
-        android:textColorHint="#6a6a6a"
-        android:layout_marginTop="20dp"
-        android:layout_gravity="center"
         android:textColor="#fdfdfd"
-        android:hint="@string/password" />
+        android:textColorHint="#6a6a6a" />
 
     <Button
         android:id="@+id/button_signin"
         android:layout_width="220dp"
         android:layout_height="wrap_content"
-        android:text="@string/sign_in"
-        android:textStyle="bold"
-        android:textSize="16sp"
-        android:textColor="#fff"
         android:layout_gravity="center"
-        android:backgroundTint="#201E28"
-        android:layout_marginTop="30dp" />
+        android:layout_marginTop="30dp"
+        android:backgroundTint="@color/accent_color"
+        android:text="@string/sign_in"
+        android:textColor="@color/text_color"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
     <ImageView
         android:id="@+id/image_google_auth"
@@ -78,7 +77,7 @@
         android:layout_marginTop="120dp"
         android:fontFamily="@font/inter"
         android:text="@string/registration"
-        android:textColor="#fdfdfd"
+        android:textColor="@color/text2_color"
         android:textSize="15sp" />
 
 </LinearLayout>
