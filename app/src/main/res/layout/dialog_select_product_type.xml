@@ -3,10 +3,10 @@
     android:id="@+id/gridLayoutProductTypes"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:alignmentMode="alignMargins"
+    android:background="@color/background_color"
     android:columnCount="3"
     android:padding="16dp"
-    android:background="#e2a600"
-    android:alignmentMode="alignMargins"
     android:rowOrderPreserved="false">
 
 </GridLayout>

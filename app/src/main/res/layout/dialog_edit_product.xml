@@ -2,56 +2,56 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/background_color"
     android:orientation="vertical"
-    android:background="#e2a600"
     android:padding="16dp">
 
     <TextView
         android:layout_width="wrap_content"
-        android:textColor="#201E28"
         android:layout_height="wrap_content"
+        android:paddingBottom="8dp"
         android:text="Expiration Date"
-        android:paddingBottom="8dp" />
+        android:textColor="@color/accent_color" />
 
     <Button
         android:id="@+id/buttonEditDate"
         android:layout_width="match_parent"
-        android:background="#201E28"
-        android:textColor="#e2a600"
         android:layout_height="wrap_content"
-        android:text="Select Expiration Date" />
+        android:background="#201E28"
+        android:text="Select Expiration Date"
+        android:textColor="#201E28" />
 
     <TextView
         android:layout_width="wrap_content"
-        android:textColor="#201E28"
         android:layout_height="wrap_content"
-        android:text="Price"
         android:paddingTop="16dp"
-        android:paddingBottom="8dp" />
+        android:paddingBottom="8dp"
+        android:text="Price"
+        android:textColor="@color/accent_color" />
 
     <EditText
         android:id="@+id/editTextEditPrice"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:hint="Enter price"
-        android:textColor="#201E28"
-        android:inputType="numberDecimal" />
+        android:inputType="numberDecimal"
+        android:textColor="#201E28" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#201E28"
-        android:text="Title"
         android:paddingTop="16dp"
-        android:paddingBottom="8dp" />
+        android:paddingBottom="8dp"
+        android:text="Title"
+        android:textColor="@color/accent_color" />
 
     <EditText
         android:id="@+id/editTextEditTitle"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:hint="Enter title"
-        android:textColor="#201E28"
-        android:inputType="text" />
+        android:inputType="text"
+        android:textColor="#201E28" />
 
 
 </LinearLayout>

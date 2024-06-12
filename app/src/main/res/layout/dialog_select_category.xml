@@ -3,7 +3,6 @@
     android:id="@+id/gridLayoutCategories"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/background_color"
     android:columnCount="3"
-    android:background="#e2a600"
-    android:padding="16dp">
-</GridLayout>
+    android:padding="16dp"></GridLayout>
