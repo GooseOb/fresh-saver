@@ -2,36 +2,36 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/background_color"
     android:orientation="vertical"
-    android:background="#e2a600"
     android:padding="16dp">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#201E28"
+        android:paddingBottom="8dp"
         android:text="Category Title"
-        android:paddingBottom="8dp" />
+        android:textColor="@color/accent_color" />
 
     <EditText
         android:id="@+id/editTextCategoryTitle"
         android:layout_width="match_parent"
-        android:textColor="#201E28"
         android:layout_height="wrap_content"
-        android:hint="Enter category title" />
+        android:hint="Enter category title"
+        android:textColor="@color/accent_color" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Category Image URL"
-        android:textColor="#201E28"
         android:paddingTop="16dp"
-        android:paddingBottom="8dp" />
+        android:paddingBottom="8dp"
+        android:text="Category Image URL"
+        android:textColor="@color/accent_color" />
 
     <EditText
         android:id="@+id/editTextCategoryImageUrl"
         android:layout_width="match_parent"
-        android:textColor="#201E28"
         android:layout_height="wrap_content"
-        android:hint="Enter image URL" />
+        android:hint="Enter image URL"
+        android:textColor="@color/accent_color" />
 </LinearLayout>
