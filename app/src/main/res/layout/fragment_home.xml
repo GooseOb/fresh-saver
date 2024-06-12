@@ -6,23 +6,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#e2a600"
+    android:background="@color/background_color"
     tools:context=".MainActivity">
 
     <RelativeLayout
-        android:background="#201E28"
         android:layout_width="match_parent"
-        android:layout_height="60dp">
+        android:layout_height="60dp"
+        android:background="@color/accent_color">
 
         <TextView
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#fdfdfd"
+            android:layout_centerInParent="true"
+            android:text="@string/food"
+            android:textColor="@color/text_color"
             android:textSize="48sp"
             android:textStyle="bold"
-            android:text="@string/food"
-            android:layout_centerInParent="true"
             tools:ignore="RelativeOverlap" />
 
         <ImageButton
@@ -32,7 +32,7 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginEnd="16dp"
-            android:background="#201E28"
+            android:background="@color/accent_color"
             android:src="@drawable/baseline_add_circle_outline_24" />
 
     </RelativeLayout>
