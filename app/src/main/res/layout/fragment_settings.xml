@@ -33,13 +33,13 @@
         android:textColor="@color/text_color"
         android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/button_logoff"
+        app:layout_constraintBottom_toTopOf="@+id/button_logout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.507"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/button_logoff"
+        android:id="@+id/button_logout"
         android:layout_width="220dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="160dp"
