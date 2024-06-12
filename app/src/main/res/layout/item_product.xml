@@ -10,37 +10,37 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:textColor="#201E28"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:text="Product Name"
         android:shadowColor="#000000"
         android:shadowDx="1"
         android:shadowDy="1"
-        android:shadowRadius="1" />
+        android:shadowRadius="1"
+        android:text="Product Name"
+        android:textColor="@color/accent_color"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/product_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#201E28"
-        android:textSize="14sp"
         android:layout_marginEnd="16dp"
-        android:text="Cost: Unknown"
         android:shadowColor="#000000"
         android:shadowDx="1"
         android:shadowDy="1"
-        android:shadowRadius="1" />
+        android:shadowRadius="1"
+        android:text="Cost: Unknown"
+        android:textColor="@color/accent_color"
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/product_expiration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#201E28"
-        android:textSize="14sp"
-        android:text="Days Left: 0"
         android:shadowColor="#000000"
         android:shadowDx="1"
         android:shadowDy="1"
-        android:shadowRadius="1" />
+        android:shadowRadius="1"
+        android:text="Days Left: 0"
+        android:textColor="@color/accent_color"
+        android:textSize="14sp" />
 </LinearLayout>
