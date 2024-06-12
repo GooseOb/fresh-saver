@@ -42,7 +42,7 @@
         android:id="@+id/button_logout"
         android:layout_width="220dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="160dp"
+        android:layout_marginBottom="32dp"
         android:backgroundTint="@color/accent_color"
         android:text="@string/log_out"
         android:textColor="@color/text_color"
@@ -50,20 +50,45 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.507"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/textView_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/textview"
         android:textColor="@color/text2_color"
+        android:textSize="16sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/button_mode"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.851" />
+        app:layout_constraintVertical_bias="0.943" />
+
+    <TextView
+        android:id="@+id/textView_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:textColor="@color/text2_color"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/textView_email"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/profileImageView"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="16dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toTopOf="@+id/textView_login"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

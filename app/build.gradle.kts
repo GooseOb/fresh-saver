@@ -37,7 +37,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -54,4 +53,6 @@ dependencies {
     implementation("com.google.firebase:firebase-auth-ktx:22.3.1")
     implementation("com.google.android.gms:play-services-auth:21.0.0")
     implementation("com.squareup.picasso:picasso:2.71828")
+    implementation ("com.github.bumptech.glide:glide:4.15.1")
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.15.1")
 }

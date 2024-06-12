@@ -11,8 +11,12 @@ import androidx.appcompat.app.AppCompatDelegate
 import android.widget.Button
 import java.util.Locale
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
+import android.widget.TextView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CircleCrop
+import android.widget.ImageView
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -29,9 +33,13 @@ class SettingsFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
     private lateinit var auth: FirebaseAuth
+    private lateinit var emailTextView: TextView
+    private lateinit var loginTextView: TextView
+    private lateinit var profileImageView: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
@@ -46,6 +54,30 @@ class SettingsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_settings, container, false)
+
+        emailTextView = view.findViewById(R.id.textView_email)
+        loginTextView = view.findViewById(R.id.textView_login)
+        profileImageView = view.findViewById(R.id.profileImageView)
+
+        val user = auth.currentUser
+        user?.let {
+            emailTextView.text = it.email
+            loginTextView.text = it.displayName
+            val photoUrl = it.photoUrl
+            if (photoUrl != null) {
+                Glide.with(this)
+                    .load(photoUrl)
+                    .transform(CircleCrop())
+                    .into(profileImageView)
+            }
+            else {
+                val defaultPhotoUrl = "https://firebasestorage.googleapis.com/v0/b/fresh-saver.appspot.com/o/profile_pictures%2Fdefault_pic.png?alt=media&token=2095c234-7b1a-475c-8d97-408833af34aa"
+                Glide.with(this)
+                    .load(defaultPhotoUrl)
+                    .transform(CircleCrop())
+                    .into(profileImageView)
+            }
+        }
 
         val button: Button = view.findViewById(R.id.button_lang)
         button.setOnClickListener {
