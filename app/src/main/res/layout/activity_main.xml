@@ -39,9 +39,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="50dp"
-        android:backgroundTint="#201E28"
+        android:backgroundTint="@color/accent_color"
         android:text="@string/next"
-        android:textColor="@color/accent_color"
+        android:textColor="@color/text_color"
         android:textSize="16sp"
         android:textStyle="bold" />
 

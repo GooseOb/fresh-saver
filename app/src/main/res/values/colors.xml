@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="background_color">#e2a600</color>
-    <color name="accent_color">##201E28</color>
+    <color name="accent_color">#201E28</color>
     <color name="text_color">#fdfdfd</color>
     <color name="text2_color">#fdfdfd</color>
+    <color name="text3_color">#fdfdfd</color>
     <color name="pure_color">#6a6a6a</color>
 </resources>

@@ -2,7 +2,8 @@
 <resources>
     <color name="background_color">##201E28</color>
     <color name="accent_color">#e2a600</color>
-    <color name="text_color">##201E28</color>
+    <color name="text_color">#201E28</color>
     <color name="text2_color">#e2a600</color>
+    <color name="text3_color">#201E28</color>
     <color name="pure_color">##e2a600</color>
 </resources>
