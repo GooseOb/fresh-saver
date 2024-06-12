@@ -7,18 +7,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#e2a600"
+    android:background="@color/background_color"
     tools:context=".MainActivity">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#fdfdfd"
         android:layout_gravity="center"
         android:layout_marginTop="170dp"
+        android:text="@string/welcome_to_freshsaver"
+        android:textColor="@color/text2_color"
         android:textSize="25sp"
-        android:textStyle="bold"
-        android:text="@string/welcome_to_freshsaver" />
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/textView"
@@ -29,7 +29,7 @@
         android:fontFamily="@font/montserrat"
         android:text="@string/your_food_freshness_ally_easily_monitor_groceries_track_expiration_dates_and_discover_your_dietary_patterns_say_hello_to_a_fresher_waste_free_kitchen_experience"
         android:textAlignment="center"
-        android:textColor="#fdfdfd"
+        android:textColor="@color/text2_color"
         android:textSize="16sp"
         android:textStyle="bold" />
 
@@ -37,12 +37,12 @@
         android:id="@+id/button_next"
         android:layout_width="220dp"
         android:layout_height="wrap_content"
-        android:text="@string/next"
-        android:textStyle="bold"
-        android:textSize="16sp"
-        android:textColor="#fff"
         android:layout_gravity="center"
+        android:layout_marginTop="50dp"
         android:backgroundTint="#201E28"
-        android:layout_marginTop="50dp" />
+        android:text="@string/next"
+        android:textColor="@color/accent_color"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
 </LinearLayout>
