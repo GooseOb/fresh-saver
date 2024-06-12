@@ -3,6 +3,7 @@
     <string name="web_client_id">1095458757260-jblc5b32cddhoio2t3a8jbsgkm7t200v.apps.googleusercontent.com</string>
     <string name="mode">Mode</string>
     <string name="language">Language</string>
+    <string name="pictura">Change profile pic</string>
     <string name="log_out">Log out</string>
     <string name="textview">TextView</string>
     <string name="textviewlogin">TextView</string>

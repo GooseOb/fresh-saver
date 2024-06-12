@@ -16,6 +16,8 @@ import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import android.widget.ImageView
+import android.net.Uri
+import com.google.firebase.auth.UserProfileChangeRequest
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -36,6 +38,7 @@ class SettingsFragment : Fragment() {
     private lateinit var emailTextView: TextView
     private lateinit var loginTextView: TextView
     private lateinit var profileImageView: ImageView
+    private lateinit var changeProfilePicButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,6 +61,7 @@ class SettingsFragment : Fragment() {
         emailTextView = view.findViewById(R.id.textView_email)
         loginTextView = view.findViewById(R.id.textView_login)
         profileImageView = view.findViewById(R.id.profileImageView)
+        changeProfilePicButton = view.findViewById(R.id.button_pic)
 
         val user = auth.currentUser
         user?.let {
@@ -77,6 +81,10 @@ class SettingsFragment : Fragment() {
                     .transform(CircleCrop())
                     .into(profileImageView)
             }
+        }
+
+        changeProfilePicButton.setOnClickListener {
+            showProfilePictureDialog()
         }
 
         val button: Button = view.findViewById(R.id.button_lang)
@@ -99,6 +107,58 @@ class SettingsFragment : Fragment() {
         }
 
         return view
+    }
+
+    private fun showProfilePictureDialog() {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Choose a Profile Picture")
+
+        val dialogLayout = layoutInflater.inflate(R.layout.dialog_profile_pictures, null)
+        builder.setView(dialogLayout)
+
+        val defaultPic1 = dialogLayout.findViewById<ImageView>(R.id.defaultPic1)
+        val defaultPic2 = dialogLayout.findViewById<ImageView>(R.id.defaultPic2)
+        val defaultPic3 = dialogLayout.findViewById<ImageView>(R.id.defaultPic3)
+        val defaultPic4 = dialogLayout.findViewById<ImageView>(R.id.defaultPic4)
+
+        val defaultPicsUrls = listOf(
+            "https://firebasestorage.googleapis.com/v0/b/fresh-saver.appspot.com/o/profile_pictures%2Fdefault_pic.png?alt=media&token=2095c234-7b1a-475c-8d97-408833af34aa",
+            "https://firebasestorage.googleapis.com/v0/b/fresh-saver.appspot.com/o/profile_pictures%2Fdefault_pic.png?alt=media&token=2095c234-7b1a-475c-8d97-408833af34aa",
+            "https://firebasestorage.googleapis.com/v0/b/fresh-saver.appspot.com/o/profile_pictures%2Fdefault_pic.png?alt=media&token=2095c234-7b1a-475c-8d97-408833af34aa",
+            "https://firebasestorage.googleapis.com/v0/b/fresh-saver.appspot.com/o/profile_pictures%2Fdefault_pic.png?alt=media&token=2095c234-7b1a-475c-8d97-408833af34aa",
+        )
+
+        val imageViews = listOf(defaultPic1, defaultPic2, defaultPic3, defaultPic4)
+
+        for (i in imageViews.indices) {
+            Glide.with(this)
+                .load(defaultPicsUrls[i])
+                .transform(CircleCrop())
+                .into(imageViews[i])
+
+            imageViews[i].setOnClickListener {
+                updateProfilePicture(defaultPicsUrls[i])
+            }
+        }
+
+        builder.show()
+    }
+
+    private fun updateProfilePicture(url: String) {
+        val user = auth.currentUser
+
+        val profileUpdates = UserProfileChangeRequest.Builder()
+            .setPhotoUri(Uri.parse(url))
+            .build()
+
+        user?.updateProfile(profileUpdates)?.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                Glide.with(this)
+                    .load(url)
+                    .transform(CircleCrop())
+                    .into(profileImageView)
+            }
+        }
     }
 
     private fun showLanguageDialog() {
