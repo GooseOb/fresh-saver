@@ -1,6 +1,5 @@
 package com.example.freshsaver
 
-import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -8,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatDelegate
 import android.widget.Button
 import java.util.Locale
 
@@ -45,6 +45,10 @@ class SettingsFragment : Fragment() {
         button.setOnClickListener {
             showLanguageDialog()
         }
+        val colorModeButton: Button = view.findViewById(R.id.button_mode)
+        colorModeButton.setOnClickListener {
+            showColorModeDialog()
+        }
 
         return view
     }
@@ -70,6 +74,25 @@ class SettingsFragment : Fragment() {
         config.setLocale(locale)
         requireContext().resources.updateConfiguration(config, requireContext().resources.displayMetrics)
 
+        activity?.recreate()
+    }
+
+    private fun showColorModeDialog() {
+        val colorModes = arrayOf("Light", "Dark")
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Choose a color mode")
+            .setItems(colorModes) { dialog, which ->
+                when (which) {
+                    0 -> setColorMode(AppCompatDelegate.MODE_NIGHT_NO)
+                    1 -> setColorMode(AppCompatDelegate.MODE_NIGHT_YES)
+                }
+            }
+            .create()
+            .show()
+    }
+
+    private fun setColorMode(mode: Int) {
+        AppCompatDelegate.setDefaultNightMode(mode)
         activity?.recreate()
     }
 
