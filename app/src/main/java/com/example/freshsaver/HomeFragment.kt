@@ -22,6 +22,9 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.tasks.Task
+import com.google.android.gms.tasks.Tasks
+import com.google.firebase.auth.FirebaseAuth
 import com.squareup.picasso.Picasso
 import java.text.SimpleDateFormat
 import java.util.*
@@ -183,6 +186,11 @@ class HomeFragment : Fragment() {
                 showProductTypesDialog(category)
             }
 
+            button.setOnLongClickListener {
+                showEditCategoryDialog(category)
+                true
+            }
+
             gridLayout.addView(button)
         }
 
@@ -250,6 +258,11 @@ class HomeFragment : Fragment() {
                         Log.d("HomeFragment", "Product type selected: ${productType.title}")
                         dialog.dismiss()
                         showAddProductDialog(productType)
+                    }
+
+                    button.setOnLongClickListener {
+                        showEditProductTypeDialog(productType)
+                        true
                     }
 
                     gridLayout.addView(button)
@@ -418,6 +431,11 @@ class HomeFragment : Fragment() {
                         button.setOnClickListener {
                             dialog.dismiss()
                             showAddProductDialog(productType)
+                        }
+
+                        button.setOnLongClickListener {
+                            showEditProductTypeDialog(productType)
+                            true
                         }
 
                         gridLayout.addView(button)
@@ -651,6 +669,122 @@ class HomeFragment : Fragment() {
         builder.create().show()
     }
 
+    private fun showEditCategoryDialog(category: Category) {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Edit Category")
+
+        val inflater = requireActivity().layoutInflater
+        val dialogView = inflater.inflate(R.layout.dialog_add_category, null)
+        builder.setView(dialogView)
+
+        val titleEditText: EditText = dialogView.findViewById(R.id.editTextCategoryTitle)
+        val imageUrlEditText: EditText = dialogView.findViewById(R.id.editTextCategoryImageUrl)
+
+        titleEditText.setText(category.title)
+        imageUrlEditText.setText(category.imageUrl)
+
+        builder.setPositiveButton("Save", null)
+        builder.setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }
+        builder.setNeutralButton("Delete") { _, _ ->
+            deleteCategory(category)
+        }
+
+        val dialog = builder.create()
+
+        dialog.setOnShowListener {
+            val positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+            positiveButton.setOnClickListener {
+                val title = titleEditText.text.toString().trim()
+                val imageUrl = imageUrlEditText.text.toString().trim()
+
+                if (title.isEmpty()) {
+                    titleEditText.error = "Title is required"
+                    return@setOnClickListener
+                }
+
+                if (imageUrl.isEmpty()) {
+                    imageUrlEditText.error = "Image URL is required"
+                    return@setOnClickListener
+                }
+
+                val updatedCategory = category.copy(
+                    title = title,
+                    imageUrl = imageUrl
+                )
+
+                DB.getInstance().setCategory(updatedCategory)
+                    .addOnSuccessListener {
+                        Toast.makeText(context, "Category updated successfully", Toast.LENGTH_SHORT).show()
+                        fetchCategories() // Обновление списка категорий
+                        dialog.dismiss() // Закрытие диалога после сохранения
+                    }
+                    .addOnFailureListener {
+                        Toast.makeText(context, "Failed to update category", Toast.LENGTH_SHORT).show()
+                    }
+            }
+        }
+
+        dialog.show()
+    }
+
+    private fun showEditProductTypeDialog(productType: ProductType) {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Edit Product Type")
+
+        val inflater = requireActivity().layoutInflater
+        val dialogView = inflater.inflate(R.layout.dialog_add_product_type, null)
+        builder.setView(dialogView)
+
+        val titleEditText: EditText = dialogView.findViewById(R.id.editTextProductTypeTitle)
+        val imageUrlEditText: EditText = dialogView.findViewById(R.id.editTextProductTypeImageUrl)
+
+        titleEditText.setText(productType.title)
+        imageUrlEditText.setText(productType.imageUrl)
+
+        builder.setPositiveButton("Save", null)
+        builder.setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }
+        builder.setNeutralButton("Delete") { _, _ ->
+            deleteProductType(productType)
+        }
+
+        val dialog = builder.create()
+
+        dialog.setOnShowListener {
+            val positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+            positiveButton.setOnClickListener {
+                val title = titleEditText.text.toString().trim()
+                val imageUrl = imageUrlEditText.text.toString().trim()
+
+                if (title.isEmpty()) {
+                    titleEditText.error = "Title is required"
+                    return@setOnClickListener
+                }
+
+                if (imageUrl.isEmpty()) {
+                    imageUrlEditText.error = "Image URL is required"
+                    return@setOnClickListener
+                }
+
+                val updatedProductType = productType.copy(
+                    title = title,
+                    imageUrl = imageUrl
+                )
+
+                DB.getInstance().setProductType(updatedProductType)
+                    .addOnSuccessListener {
+                        Toast.makeText(context, "Product type updated successfully", Toast.LENGTH_SHORT).show()
+                        fetchCategories() // Обновление списка категорий
+                        dialog.dismiss() // Закрытие диалога после сохранения
+                    }
+                    .addOnFailureListener {
+                        Toast.makeText(context, "Failed to update product type", Toast.LENGTH_SHORT).show()
+                    }
+            }
+        }
+
+        dialog.show()
+    }
+
     private fun updateButtonDateText(button: Button, calendar: Calendar) {
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         button.text = "Expiration Date: ${dateFormat.format(calendar.time)}"
@@ -681,6 +815,67 @@ class HomeFragment : Fragment() {
             }
             .addOnFailureListener {
                 Toast.makeText(context, "Failed to delete product", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    private fun deleteCategory(category: Category) {
+        val db = DB.getInstance()
+        db.getProductTypesByCategory(category.id)
+            .addOnSuccessListener { productTypes ->
+                val deletionTasks = productTypes.map { productType ->
+                    db.getProductsByType(productType.id)
+                        .continueWithTask { task ->
+                            val productDeletionTasks = task.result?.map { product ->
+                                db.deleteUserProduct(product.id)
+                            } ?: emptyList()
+                            Tasks.whenAll(productDeletionTasks)
+                        }
+                        .continueWithTask {
+                            db.deleteProductType(productType.id)
+                        }
+                }
+
+                Tasks.whenAll(deletionTasks)
+                    .continueWithTask {
+                        db.deleteCategory(category.id)
+                    }
+                    .addOnSuccessListener {
+                        Toast.makeText(context, "Category and its products deleted successfully", Toast.LENGTH_SHORT).show()
+                        fetchCategories()
+                        fetchUserProducts()
+                    }
+                    .addOnFailureListener {
+                        Toast.makeText(context, "Failed to delete category and its products", Toast.LENGTH_SHORT).show()
+                    }
+            }
+            .addOnFailureListener {
+                Toast.makeText(context, "Failed to fetch product types for category", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    private fun deleteProductType(productType: ProductType) {
+        val db = DB.getInstance()
+        db.getProductsByType(productType.id)
+            .addOnSuccessListener { products ->
+                val productDeletionTasks = products.map { product ->
+                    db.deleteUserProduct(product.id)
+                }
+
+                Tasks.whenAll(productDeletionTasks)
+                    .continueWithTask {
+                        db.deleteProductType(productType.id)
+                    }
+                    .addOnSuccessListener {
+                        Toast.makeText(context, "Product type and its products deleted successfully", Toast.LENGTH_SHORT).show()
+                        fetchCategories()
+                        fetchUserProducts()
+                    }
+                    .addOnFailureListener {
+                        Toast.makeText(context, "Failed to delete product type and its products", Toast.LENGTH_SHORT).show()
+                    }
+            }
+            .addOnFailureListener {
+                Toast.makeText(context, "Failed to fetch products for product type", Toast.LENGTH_SHORT).show()
             }
     }
 }

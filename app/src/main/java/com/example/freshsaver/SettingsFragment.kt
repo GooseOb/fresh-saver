@@ -122,10 +122,10 @@ class SettingsFragment : Fragment() {
         val defaultPic4 = dialogLayout.findViewById<ImageView>(R.id.defaultPic4)
 
         val defaultPicsUrls = listOf(
-            "https://firebasestorage.googleapis.com/v0/b/fresh-saver.appspot.com/o/profile_pictures%2Fdefault_pic.png?alt=media&token=2095c234-7b1a-475c-8d97-408833af34aa",
-            "https://firebasestorage.googleapis.com/v0/b/fresh-saver.appspot.com/o/profile_pictures%2Fdefault_pic.png?alt=media&token=2095c234-7b1a-475c-8d97-408833af34aa",
-            "https://firebasestorage.googleapis.com/v0/b/fresh-saver.appspot.com/o/profile_pictures%2Fdefault_pic.png?alt=media&token=2095c234-7b1a-475c-8d97-408833af34aa",
-            "https://firebasestorage.googleapis.com/v0/b/fresh-saver.appspot.com/o/profile_pictures%2Fdefault_pic.png?alt=media&token=2095c234-7b1a-475c-8d97-408833af34aa",
+            "https://firebasestorage.googleapis.com/v0/b/fresh-saver.appspot.com/o/profile_pictures%2F3.jpg?alt=media&token=9dde2ddf-c3b6-4740-91bd-07030a9e6614",
+            "https://firebasestorage.googleapis.com/v0/b/fresh-saver.appspot.com/o/profile_pictures%2F1.jpg?alt=media&token=a2c041e0-5aed-43c2-9fe0-6738c5574418",
+            "https://firebasestorage.googleapis.com/v0/b/fresh-saver.appspot.com/o/profile_pictures%2F5.jpg?alt=media&token=7cea2848-1996-452a-9c39-4582d3199fc2",
+            "https://firebasestorage.googleapis.com/v0/b/fresh-saver.appspot.com/o/profile_pictures%2F10.jpg?alt=media&token=91f39595-4d7d-4c79-8a58-f2440cb839c7",
         )
 
         val imageViews = listOf(defaultPic1, defaultPic2, defaultPic3, defaultPic4)
