@@ -1,59 +1,95 @@
 package com.example.freshsaver
 
+import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Picasso
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [RecipesFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class RecipesFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var recipeAdapter: RecipeAdapter
+    private val recipeList = mutableListOf<Recipe>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_recipes, container, false)
+        val view = inflater.inflate(R.layout.fragment_recipes, container, false)
+        recyclerView = view.findViewById(R.id.recycler_view)
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        recipeAdapter = RecipeAdapter(recipeList) { recipe ->
+            val intent = Intent(context, RecipeDetailActivity::class.java).apply {
+                putExtra("recipeTitle", recipe.title)
+                putExtra("recipeImageUrl", recipe.imageUrl)
+                putExtra("recipeDescription", recipe.text)
+                putStringArrayListExtra("productTypeIds", ArrayList(recipe.productTypeIds))
+            }
+            startActivity(intent)
+        }
+        recyclerView.adapter = recipeAdapter
+
+        fetchRecipes()
+
+        return view
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment RecipesFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            RecipesFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    private fun fetchRecipes() {
+        DB.getInstance().getRecipesOrdered()
+            .addOnSuccessListener { result ->
+                recipeList.clear()
+                recipeList.addAll(result)
+                recipeAdapter.notifyDataSetChanged()
+            }
+            .addOnFailureListener { exception ->
+                // Handle error
+            }
+    }
+
+    private class RecipeAdapter(
+        private val recipes: List<Recipe>,
+        private val onClick: (Recipe) -> Unit
+    ) : RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder>() {
+
+        class RecipeViewHolder(view: View, val onClick: (Recipe) -> Unit) : RecyclerView.ViewHolder(view) {
+            private val recipeTitle: TextView = view.findViewById(R.id.recipe_title)
+            private val recipeImage: ImageView = view.findViewById(R.id.recipe_image)
+            private var currentRecipe: Recipe? = null
+
+            init {
+                view.setOnClickListener {
+                    currentRecipe?.let { onClick(it) }
                 }
             }
+
+            fun bind(recipe: Recipe) {
+                currentRecipe = recipe
+                recipeTitle.text = recipe.title
+                if (recipe.imageUrl != null) {
+                    Picasso.get().load(recipe.imageUrl).into(recipeImage)
+                } else {
+                    recipeImage.setImageResource(R.drawable.ic_placeholder)
+                }
+            }
+        }
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecipeViewHolder {
+            val view = LayoutInflater.from(parent.context)
+                .inflate(R.layout.item_recipe, parent, false)
+            return RecipeViewHolder(view, onClick)
+        }
+
+        override fun onBindViewHolder(holder: RecipeViewHolder, position: Int) {
+            holder.bind(recipes[position])
+        }
+
+        override fun getItemCount() = recipes.size
     }
 }

@@ -26,6 +26,7 @@
         <activity
             android:name=".AuthActivity"
             android:exported="false" />
+        <activity android:name=".RecipeDetailActivity" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
